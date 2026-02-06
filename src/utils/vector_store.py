@@ -1,34 +1,23 @@
 
 import numpy as np
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
+# from sentence_transformers import SentenceTransformer (Removed for Lite Mode)
+# from sklearn.metrics.pairwise import cosine_similarity
 import streamlit as st
 
-# Check if model is cached to avoid reloading
+# Lite Mode: No heavy embedding models
 @st.cache_resource
 def load_embedding_model():
-    # Multilingual model for Zero-Shot Hindi Analysis
-    return SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
+    return None
 
 class VectorKnowledgeBase:
     def __init__(self):
-        self.model = load_embedding_model()
+        # self.model = load_embedding_model()
         self.documents = []
-        self.vectors = None
         self.metadata = []
         
-        # Initialize with some Gold Standard / Bad Clauses for RAG
+        # Initialize with static data only (no vectors)
         self._initialize_knowledge_base()
         
-        # Risk Anchors for Zero-Shot Analysis
-        self.risk_anchors = {
-            "Unilateral Termination": "One party can terminate the agreement at any time without cause or notice.",
-            "Unlimited Indemnity": "The vendor shall indemnify the client for all losses without any limit or cap.",
-            "Foreign Jurisdiction": "Any dispute shall be subject to the exclusive jurisdiction of courts in London, UK or Singapore.",
-            "Unreasonable Payment Terms": "Payment shall be made within 90 days or more from the date of invoice."
-        }
-        self.risk_vectors = self.model.encode(list(self.risk_anchors.values()))
-    
     def _initialize_knowledge_base(self):
         # Data: (Text, Type, Analysis)
         kb_data = [
@@ -44,23 +33,32 @@ class VectorKnowledgeBase:
         
         self.documents = [item[0] for item in kb_data]
         self.metadata = [{"type": item[1], "analysis": item[2]} for item in kb_data]
-        self.vectors = self.model.encode(self.documents)
+        # self.vectors = self.model.encode(self.documents)
 
     def search(self, query, top_k=3):
         """
-        Semantic search for the most similar knowledge base entries.
+        Lite Mode: Keyword-based fallback search.
         """
-        query_vector = self.model.encode([query])
-        similarities = cosine_similarity(query_vector, self.vectors)[0]
-        
-        # Get top k indices
-        top_indices = np.argsort(similarities)[-top_k:][::-1]
-        
         results = []
+        query_words = set(query.lower().split())
+        
+        scores = []
+        for i, doc in enumerate(self.documents):
+            doc_words = set(doc.lower().split())
+            vocab = query_words.union(doc_words)
+            # Simple Jaccard similarity as fallback
+            intersection = query_words.intersection(doc_words)
+            score = len(intersection) / len(vocab) if vocab else 0
+            scores.append((score, i))
+            
+        # Sort by score
+        scores.sort(key=lambda x: x[0], reverse=True)
+        top_indices = [idx for score, idx in scores[:top_k] if score > 0]
+        
         for idx in top_indices:
             results.append({
                 "text": self.documents[idx],
-                "score": float(similarities[idx]),
+                "score": 0.5, # Dummy score
                 "metadata": self.metadata[idx]
             })
             
@@ -68,26 +66,12 @@ class VectorKnowledgeBase:
 
     def analyze_multilingual_risk(self, clause_text, threshold=0.55):
         """
-        Zero-Shot checks if a (Hindi/English) clause matches known High Risk concepts.
+        Lite Mode: Returns neutral result as vector analysis is disabled.
         """
-        clause_vector = self.model.encode([clause_text])
-        similarities = cosine_similarity(clause_vector, self.risk_vectors)[0]
-        
-        best_idx = np.argmax(similarities)
-        best_score = similarities[best_idx]
-        
-        if best_score > threshold:
-            risk_type = list(self.risk_anchors.keys())[best_idx]
-            return {
-                "risk": "High",
-                "type": risk_type,
-                "score": float(best_score),
-                "reason": f"Semantic match to high-risk concept: '{risk_type}' (Confidence: {best_score:.2f})"
-            }
-        return {"risk": "Low", "type": "Safe", "score": float(best_score), "reason": "No high-risk concepts detected."}
+        return {"risk": "Low", "type": "Safe", "score": 0.0, "reason": "Vector analysis disabled in Lite Mode."}
 
     def get_embedding(self, text):
-        return self.model.encode([text])[0]
+        return np.zeros(384) # Dummy vector
 
 @st.cache_resource
 def get_vector_kb():
