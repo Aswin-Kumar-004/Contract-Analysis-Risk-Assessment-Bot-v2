@@ -1,9 +1,8 @@
 streamlit==1.31.0
 anthropic==0.77.0
-spacy==3.7.2
+spacy==3.8.1
+en-core-web-sm==3.8.0
 pypdf==4.0.0
 python-docx==1.1.0
 reportlab==4.0.9
 pandas==2.1.4
-
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
