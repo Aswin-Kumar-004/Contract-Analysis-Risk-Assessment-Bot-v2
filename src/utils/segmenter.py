@@ -1,7 +1,4 @@
-import spacy
 import re
-
-nlp = spacy.load("en_core_web_sm")
 
 def segment_clauses(text):
     """
@@ -33,17 +30,21 @@ def segment_clauses(text):
         clauses.append(current_clause.strip())
         
     # Fallback: if fewer than 3 clauses detected, might be bad formatting. 
-    # Use simpler sentence grouping.
+    # Use simple paragraph/sentence splitting.
     if len(clauses) < 3:
-        doc = nlp(text)
-        clauses = []
-        current = ""
-        for sent in doc.sents:
-            current += sent.text + " "
-            if len(current.split()) >= 80: # Increased word count for fallback
-                clauses.append(current.strip())
-                current = ""
-        if current.strip():
-            clauses.append(current.strip())
+        # Regex to split by sentence boundaries (approximate)
+        # Matches period/question/exclamation followed by space and capital letter or newline
+        sentence_pattern = r'(?<=[.!?])\s+(?=[A-Z])|(?<=[.!?])\s*\n'
+        raw_sentences = re.split(sentence_pattern, text)
+        
+        current_chunk = ""
+        for sent in raw_sentences:
+            current_chunk += sent + " "
+            # Group into chunks of ~80 words
+            if len(current_chunk.split()) >= 80:
+                clauses.append(current_chunk.strip())
+                current_chunk = ""
+        if current_chunk.strip():
+            clauses.append(current_chunk.strip())
 
     return clauses

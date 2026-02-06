@@ -1,5 +1,5 @@
 
-import numpy as np
+
 # from sentence_transformers import SentenceTransformer (Removed for Lite Mode)
 # from sklearn.metrics.pairwise import cosine_similarity
 import streamlit as st
@@ -71,7 +71,7 @@ class VectorKnowledgeBase:
         return {"risk": "Low", "type": "Safe", "score": 0.0, "reason": "Vector analysis disabled in Lite Mode."}
 
     def get_embedding(self, text):
-        return np.zeros(384) # Dummy vector
+        return [0.0] * 384 # Dummy vector
 
 @st.cache_resource
 def get_vector_kb():

@@ -1,42 +1,14 @@
-import spacy
 import re
-
 import streamlit as st
-
-@st.cache_resource
-def load_nlp_model():
-    try:
-        # Robust loading: Try to import as a module first (Best for Streamlit Cloud)
-        import en_core_web_sm
-        nlp = en_core_web_sm.load()
-    except ImportError:
-        # Fallback: standard spacy loading
-        try:
-            nlp = spacy.load("en_core_web_sm")
-        except OSError:
-            # Last resort: download
-            from spacy.cli import download
-            download("en_core_web_sm")
-            nlp = spacy.load("en_core_web_sm")
-    return nlp
+# No spacy imports
 
 def extract_entities(text):
     """
-    Enhanced NER: Extracts 12+ entity types from contracts.
-    Backward compatible - returns same structure as before but with more entities.
+    Enhanced NER: Extracts 12+ entity types from contracts using Regex Patterns.
+    Refactored to be pure python (No Spacy) for deployment reliability.
     """
-    try:
-        nlp = load_nlp_model()
-    except OSError:
-        # Fallback if download failed
-        from spacy.cli import download
-        download("en_core_web_sm")
-        nlp = load_nlp_model()
-        
-    doc = nlp(text)
-
     entities = {
-        # Original 4 types (backward compatible)
+        # Original 4 types
         "Parties (ORG)": set(),
         "Dates": set(),
         "Amounts": set(),
@@ -53,26 +25,29 @@ def extract_entities(text):
         "Liability Caps": set()
     }
 
-    # SpaCy extraction (original)
-    for ent in doc.ents:
-        if ent.label_ == "ORG":
-            entities["Parties (ORG)"].add(ent.text)
-        elif ent.label_ == "DATE":
-            entities["Dates"].add(ent.text)
-        elif ent.label_ == "MONEY":
-            entities["Amounts"].add(ent.text)
-        elif ent.label_ == "GPE":
-            entities["Jurisdiction (GPE)"].add(ent.text)
-
-    # Regex Fallback for original types
-    if not entities["Dates"]:
-         date_matches = re.findall(r"\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December),?\s+\d{4}|\d{2}/\d{2}/\d{4}", text, re.IGNORECASE)
-         entities["Dates"].update(date_matches)
+    # Regex Extraction Logic
     
-    if not entities["Amounts"]:
-         # Matches ₹ or Rs. followed by numbers
-         amount_matches = re.findall(r"(?:Rs\.?|INR|₹)\s?[\d,]+(?:\.\d{2})?(?:/-)? ", text)
-         entities["Amounts"].update(amount_matches)
+    # 1. Dates
+    date_matches = re.findall(r"\d{1,2}(?:st|nd|rd|th)?\s+(?:January|February|March|April|May|June|July|August|September|October|November|December),?\s+\d{4}|\d{2}/\d{2}/\d{4}", text, re.IGNORECASE)
+    entities["Dates"].update(date_matches)
+    
+    # 2. Amounts
+    # Matches ₹ or Rs. followed by numbers
+    amount_matches = re.findall(r"(?:Rs\.?|INR|₹|USD|\$)\s?[\d,]+(?:\.\d{2})?(?:/-)?(?:\s+(?:Lakh|Crore|Million|Billion))?", text, re.IGNORECASE)
+    entities["Amounts"].update(amount_matches)
+
+    # 3. Parties (Heuristic Capitalization)
+    # Looking for "Between [X] and [Y]" patterns commonly found in contracts
+    parties_pattern = r"BETWEEN\s+([A-Z][a-zA-Z0-9\s\.,]+?)\s+(?:AND|&)\s+([A-Z][a-zA-Z0-9\s\.,]+?)\s+(?:WHEREAS|dated|collected)"
+    parties_match = re.search(parties_pattern, text, re.IGNORECASE)
+    if parties_match:
+         entities["Parties (ORG)"].add(parties_match.group(1).strip())
+         entities["Parties (ORG)"].add(parties_match.group(2).strip())
+
+    # 4. Jurisdiction
+    jurisdiction_pattern = r"(?:subject to|governed by).*?jurisdiction.*?courts.*?in\s+([A-Z][a-zA-Z\s]+)"
+    gpe_match = re.findall(jurisdiction_pattern, text, re.IGNORECASE)
+    entities["Jurisdiction (GPE)"].update([g.strip() for g in gpe_match])
 
     # ===================================================================
     # NEW ENTITY EXTRACTIONS

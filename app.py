@@ -1,9 +1,9 @@
 import streamlit as st
 import tempfile
 import os
-import pandas as pd
-import altair as alt
-import plotly.graph_objects as go
+# import pandas as pd (Removed for Lite Mode)
+# import altair as alt (Removed for Lite Mode)
+# import plotly.graph_objects as go (Removed for Lite Mode)
 
 from src.utils.preprocess import extract_text, clean_text
 from src.utils.segmenter import segment_clauses
@@ -694,22 +694,18 @@ if page == "🔍 Analyze Contract":
         for r in data["results"]:
             risk_counts[r["risk"]] += 1
         
-        fig = go.Figure(data=[
-            go.Bar(
-                x=list(risk_counts.keys()),
-                y=list(risk_counts.values()),
-                marker_color=['#28a745', '#ffc107', '#dc3545'],
-                text=list(risk_counts.values()),
-                textposition='auto',
-            )
-        ])
-        fig.update_layout(
-            title="Number of Clauses by Risk Level",
-            xaxis_title="Risk Level",
-            yaxis_title="Count",
-            height=300
-        )
-        st.plotly_chart(fig, width='stretch')
+        # Simplified Risk Display for Lite Mode (No Plotly)
+        st.markdown("### ⚠️ Risk Distribution")
+        col_r1, col_r2, col_r3 = st.columns(3)
+        with col_r1:
+            st.metric("High Risks", risk_report.get('High', 0), delta="Critical", delta_color="inverse")
+        with col_r2:
+            st.metric("Medium Risks", risk_report.get('Medium', 0), delta="Warning", delta_color="off")
+        with col_r3:
+            st.metric("Low Risks", risk_report.get('Low', 0), delta="Safe", delta_color="normal")
+            
+        # Simple progress bar for risk score
+        st.progress(risk_report.get('score', 50) / 100, text=f"Overall Risk Score: {risk_report.get('score', 50)}/100")
         
         # Entities (Enhanced - Now shows 12+ types)
         with st.expander(f"🔍 Extracted Key Information ({sum(len(v) for v in data['entities'].values())} items found)"):
@@ -1103,39 +1099,16 @@ elif page == "🧠 Tech & Architecture":
     - **Tested on:** 50 real SME contracts reviewed by lawyers
     """)
     
-    # Visualization of embeddings
-    st.subheader("📊 Vector Space Visualization (Simulated)")
+    # Visualization of embeddings (Simplified for Lite Mode)
+    st.subheader("📊 Vector Space Analysis")
     
-    data_vis = pd.DataFrame({
-        'x': [1, 1.2, 5, 5.2, 3, 3.1, 2, 6, 4],
-        'y': [1, 1.1, 5, 5.1, 3, 2.9, 2, 4, 3.5],
-        'Category': [
-            'Termination (Safe)',
-            'Termination (Risky)',
-            'Indemnity (Safe)',
-            'Indemnity (Unlimited)',
-            'Jurisdiction (India)',
-            'Jurisdiction (Foreign)',
-            'Payment (30 days)',
-            'Payment (90 days)',
-            'Confidentiality'
-        ]
-    })
-    
-    chart = alt.Chart(data_vis).mark_circle(size=200).encode(
-        x=alt.X('x', scale=alt.Scale(domain=[0, 7])),
-        y=alt.Y('y', scale=alt.Scale(domain=[0, 6])),
-        color='Category',
-        tooltip=['Category']
-    ).interactive().properties(
-        title="Semantic Clusters of Legal Concepts (2D Projection)",
-        width=600,
-        height=400
-    )
-    
-    st.altair_chart(chart, width='stretch')
-    
-    st.caption("Note: Actual embeddings are 384-dimensional. This is a 2D projection for visualization.")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.info("**Safe Zone**\n\n- Termination (Mutual)\n- Jurisdiction (Local)\n- Indemnity (Capped)")
+    with col2:
+        st.error("**Risk Zone**\n\n- Unilateral Termination\n- Foreign Jurisdiction\n- Unlimited Liability")
+        
+    st.caption("*Visualization simplified for Cloud Deployment efficiency.*")
     
     st.markdown("""
     ### Code Sample
