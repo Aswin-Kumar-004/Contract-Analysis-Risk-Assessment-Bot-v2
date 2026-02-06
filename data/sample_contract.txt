@@ -1,0 +1,48 @@
+SERVICE AGREEMENT (VENDOR CONTRACT)
+
+This Service Agreement ("Agreement") is entered into on this 1st day of February, 2026, by and between:
+
+TechSolutions Pvt Ltd, a company incorporated under the Companies Act, 2013, having its registered office at Start-up Hub, Koramangala, Bengaluru, Karnataka (hereinafter referred to as the "Client");
+
+AND
+
+QuickFix IT Services, a proprietorship firm having its office at MG Road, Pune, Maharashtra (hereinafter referred to as the "Vendor").
+
+WHEREAS, the Client wishes to engage the Vendor for IT maintenance services, and the Vendor agrees to provide such services.
+
+NOW, THEREFORE, the parties agree as follows:
+
+1. SCOPE OF SERVICES
+The Vendor shall provide 24/7 server maintenance and on-call support for the Client's infrastructure.
+
+2. PAYMENT TERMS
+The Client shall pay the Vendor a monthly retainer of INR 50,000/- plus applicable GST. Payment shall be made within 60 days of invoice receipt.
+
+3. TERM AND TERMINATION
+3.1. This Agreement shall be valid for a period of 12 months.
+3.2. WARNING: The Client may terminate this Agreement at its sole discretion, without cause, by giving 24 hours' notice.
+3.3. The Vendor cannot terminate this Agreement before the completion of the 12-month term.
+3.4. If the Vendor terminates early, they shall be liable to pay a penalty of Rs. 2,00,000/- as liquidated damages.
+
+4. INDEMNITY
+The Vendor agrees to indemnify, defend, and hold harmless the Client from and against any and all claims, unlimited liability, damages, and expenses arising out of any breach of this Agreement. This indemnity is unlimited in amount and duration.
+
+5. CONFIDENTIALITY
+The Vendor shall not disclose any proprietary information to third parties. This obligation survives termination.
+
+6. NON-COMPETE
+During the term of this Agreement and for 2 years thereafter, the Vendor shall not provide similar services to any competitor of the Client within India.
+
+7. GOVERNING LAW AND JURISDICTION
+This Agreement shall be governed by the laws of India. Any dispute arising out of this Agreement shall be subject to the exclusive jurisdiction of the courts at New York, USA. (Note: This is a high-risk clause for an Indian SME).
+
+8. ARBITRATION
+Any dispute shall be referred to a sole arbitrator appointed by the Client. The seat of arbitration shall be London, UK.
+
+IN WITNESS WHEREOF, the parties have signed this Agreement.
+
+For TechSolutions Pvt Ltd
+(Signature)
+
+For QuickFix IT Services
+(Signature)

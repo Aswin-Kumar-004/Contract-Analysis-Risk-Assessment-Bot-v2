@@ -1,0 +1,50 @@
+# --- Environment & Secrets ---
+.env
+.env.*
+secrets.toml
+.streamlit/config.toml
+.streamlit/secrets.toml
+
+# --- Virtual Environments ---
+venv3/
+venv/
+env/
+.venv/
+ENV/
+
+# --- Python Cache & Temporary Files ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.tox/
+.coverage
+htmlcov/
+
+# --- Project Specific Data & Logs ---
+data/audit_logs.json
+*.pdf
+logs/
+*.log
+
+# --- OS Junk ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+thumbs.db
+Desktop.ini
+
+# --- IDE & Editor Settings ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
