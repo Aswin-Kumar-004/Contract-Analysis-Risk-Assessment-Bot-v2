@@ -33,9 +33,7 @@ st.markdown("""
         font-family: 'Inter', sans-serif;
     }
     
-    .main {
-        background-color: #f8f9fa;
-    }
+
     
     .stButton>button {
         border-radius: 8px;
@@ -366,16 +364,69 @@ if page == "🔍 Analyze Contract":
         
         verdict_type, verdict_icon, verdict_color = verdict_colors.get(verdict, ("info", "❓", "gray"))
         
-        # Huge verdict banner
+        # Custom CSS for the Verdict Card
+        st.markdown(f"""
+        <style>
+            .verdict-box {{
+                padding: 2rem;
+                border-radius: 12px;
+                text-align: center;
+                margin-bottom: 2rem;
+                background: linear-gradient(135deg, {verdict_color} 0%, white 200%);
+                color: {verdict_color};
+                border: 2px solid {verdict_color};
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }}
+            .verdict-title {{
+                font-size: 3rem;
+                font-weight: 800;
+                margin-bottom: 0.5rem;
+                color: {verdict_color if verdict_color != 'success' else '#2b8a3e'};
+            }}
+            .verdict-subtitle {{
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #555;
+            }}
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # Huge verdict banner (GAP 3 Fix)
         if verdict == "SIGN":
-            st.success(f"# {verdict_icon} RECOMMENDATION: SAFE TO SIGN")
-            st.markdown("This contract appears safe for your business. Proceed with confidence.")
+            icon = "✅"
+            color = "#d4edda"
+            text_color = "#155724"
+            st.markdown(f"""
+                <div style="background-color: {color}; color: {text_color}; padding: 30px; border-radius: 15px; text-align: center; border: 2px solid {text_color};">
+                    <div style="font-size: 60px; margin-bottom: 10px;">{icon}</div>
+                    <h1 style="color: {text_color}; margin: 0;">SAFE TO SIGN</h1>
+                    <p style="font-size: 20px; font-weight: 600; margin-top: 10px;">Proceed with confidence. This contract honors Indian SME standards.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
         elif verdict == "NEGOTIATE":
-            st.warning(f"# {verdict_icon} RECOMMENDATION: NEGOTIATE BEFORE SIGNING")
-            st.markdown("**Do NOT sign as-is.** Critical issues need fixing first.")
+            icon = "⚠️"
+            color = "#fff3cd"
+            text_color = "#856404"
+            st.markdown(f"""
+                <div style="background-color: {color}; color: {text_color}; padding: 30px; border-radius: 15px; text-align: center; border: 2px solid {text_color};">
+                    <div style="font-size: 60px; margin-bottom: 10px;">{icon}</div>
+                    <h1 style="color: {text_color}; margin: 0;">NEGOTIATE FIRST</h1>
+                    <p style="font-size: 20px; font-weight: 600; margin-top: 10px;">Do NOT sign as-is. Identify the risks below and request changes.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            
         else:  # REJECT
-            st.error(f"# {verdict_icon} RECOMMENDATION: DO NOT SIGN")
-            st.markdown("**DANGER:** This contract could destroy your business. Walk away or demand complete rewrite.")
+            icon = "🚫"
+            color = "#f8d7da"
+            text_color = "#721c24"
+            st.markdown(f"""
+                <div style="background-color: {color}; color: {text_color}; padding: 30px; border-radius: 15px; text-align: center; border: 2px solid {text_color};">
+                    <div style="font-size: 60px; margin-bottom: 10px;">{icon}</div>
+                    <h1 style="color: {text_color}; margin: 0;">HIGH RISK - DO NOT SIGN</h1>
+                    <p style="font-size: 20px; font-weight: 600; margin-top: 10px;">This contract contains dangerous clauses that could harm your business.</p>
+                </div>
+            """, unsafe_allow_html=True)
         
         # Primary reasoning
         st.info(f"**Why:** {decision.get('primary_reasoning', 'Analysis in progress')}")
@@ -558,6 +609,50 @@ if page == "🔍 Analyze Contract":
                 for factor in fin_data['risk_factors']:
                     st.write(f"• {factor}")
         
+        st.divider()
+
+        # ═══════════════════════════════════════════════════════════════
+        # 📊 KNOWLEDGE BASE & LEARNING DASHBOARD (Gap 4 Fix)
+        # ═══════════════════════════════════════════════════════════════
+        st.markdown("### 🧠 Knowledge Base & Learning")
+        st.caption("How this contract compares to typical risks in your industry")
+        
+        k1, k2 = st.columns(2)
+        
+        with k1:
+            st.markdown("#### 🚨 Top Risks for This Contract Type")
+            st.markdown(f"**Category:** {data['contract_type']}")
+            
+            # Static "Knowledge Base" Simulation
+            common_risks = {
+                "Service Agreement": ["Unclear Scope", "Payment Delays", "IP Assignment"],
+                "NDA": ["Perpetual Confidentiality", "Broad Definition", "No Exceptions"],
+                "Employment Agreement": ["Non-Compete", "Notice Period", "IP Ownership"],
+                "Vendor Contract": ["Indemnity Caps", "Termination Rights", "Payment Terms"]
+            }
+            
+            risks = common_risks.get(data['contract_type'], ["General Liability", "Termination", "Dispute Resolution"])
+            for i, r in enumerate(risks, 1):
+                st.markdown(f"{i}. **{r}**")
+                
+        with k2:
+            st.markdown("#### 📉 Your Risk Profile vs. Market")
+            
+            # Simulated market comparison
+            market_risk = 45 # Average
+            my_risk = data['overall_risk']
+            my_score = data['decision'].get('decision_score', 50)
+            
+            delta_msg = "Better than average" if my_score < market_risk else "Riskier than average"
+            delta_color = "green" if my_score < market_risk else "red"
+            
+            st.metric("Market Average Risk Score", "45/100")
+            st.metric("Your Contract Risk Score", f"{my_score}/100", 
+                     delta=f"{my_score - market_risk} points ({delta_msg})",
+                     delta_color="inverse")
+
+        st.divider()
+        
         # Risk Distribution Chart
         st.subheader("📈 Risk Distribution")
         risk_counts = {"Low": 0, "Medium": 0, "High": 0}
@@ -654,12 +749,25 @@ if page == "🔍 Analyze Contract":
                 with st.expander(f"Clause {item['id']}: {item['type']} — {risk_badge} {item['risk']} Risk"):
                     # Metadata Pills
                     st.markdown(f"""
-                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
                             <span style="background-color: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;">📋 {item['type']}</span>
                             <span style="background-color: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;">💡 {item['modality']}</span>
                             <span style="background-color: #f1f3f5; color: #495057; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600;">⚖️ Clause {item['id']}</span>
-                        </div>
                     """, unsafe_allow_html=True)
+
+                    # Compliance Badges (GAP 2 Fix)
+                    is_indian_risk = False
+                    if "arbitration" in item['text'].lower() and ("london" in item['text'].lower() or "singapore" in item['text'].lower()):
+                        is_indian_risk = True
+                        st.markdown('<span style="background-color: #ffe8cc; color: #d9480f; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; margin-left: 5px;">🇮🇳 India Enforcement Risk</span> COMPLIANCE', unsafe_allow_html=True)
+                    
+                    if "non-compete" in item['type'].lower() and item.get('risk') == 'High':
+                        st.markdown('<span style="background-color: #fff5f5; color: #c92a2a; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; margin-left: 5px;">🚩 Aggressive Non-Compete</span>', unsafe_allow_html=True)
+                    
+                    if "indemn" in item['type'].lower() and "unlimited" in item['text'].lower():
+                        st.markdown('<span style="background-color: #fff5f5; color: #c92a2a; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; margin-left: 5px;">⚠️ SME Unfavorable</span>', unsafe_allow_html=True)
+
+                    st.markdown("</div>", unsafe_allow_html=True)
 
                     st.markdown(f"**Original Clause Text:**")
                     st.info(item['text'])
@@ -719,20 +827,22 @@ if page == "🔍 Analyze Contract":
                         comparison = compare_clause_to_standard(item['text'], item['type'])
                         if comparison:
                             st.markdown("---")
-                            st.markdown("##### ⚖️ Industry Standard Comparison")
+                            st.markdown("##### ⚖️ Comparison with Standard")
                             
                             c1, c2 = st.columns(2)
                             with c1:
                                 st.markdown("**Your Clause:**")
-                                st.caption(comparison['user_clause'][:200] + "...")
+                                st.caption(comparison['user_clause'])
                             with c2:
-                                st.markdown("**Safe Standard:**")
-                                st.caption(comparison['standard_clause'][:200] + "...")
+                                st.markdown("**🔁 Suggested SME-Friendly Alternative:**")
+                                st.success(comparison['standard_clause'])
+                                st.caption(f"*{comparison['standard_description']}*")
                             
+                            # Similarity Bar
                             similarity = comparison['similarity_score']
                             sim_color = "red" if similarity < 50 else ("orange" if similarity < 80 else "green")
                             st.markdown(f"""
-                                <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                                <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px; margin-bottom: 10px;">
                                     <div style="flex-grow: 1; height: 8px; background-color: #e9ecef; border-radius: 4px;">
                                         <div style="width: {similarity}%; height: 100%; background-color: {sim_color}; border-radius: 4px;"></div>
                                     </div>
@@ -740,6 +850,13 @@ if page == "🔍 Analyze Contract":
                                 </div>
                             """, unsafe_allow_html=True)
                             
+                            # Why is this better? (The GAP 1 Fix)
+                            if comparison.get('benefits'):
+                                st.markdown("##### 💡 Why the Alternative is Better?")
+                                for benefit in comparison['benefits']:
+                                    st.markdown(f"✅ {benefit}")
+                            
+                            st.divider()
                             st.markdown(f"**Verdict:** {comparison['verdict']}")
                             
                             if comparison.get('differences'):

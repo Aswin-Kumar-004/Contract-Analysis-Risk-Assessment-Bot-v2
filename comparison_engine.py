@@ -37,6 +37,7 @@ def compare_clause_to_standard(user_clause, clause_type):
         "user_clause": user_clause,
         "standard_clause": standard_clause,
         "standard_description": standard_data["description"],
+        "benefits": standard_data.get("benefits", []), # Added benefits
         "similarity_score": similarity_score,
         "verdict": verdict,
         "verdict_color": verdict_color,

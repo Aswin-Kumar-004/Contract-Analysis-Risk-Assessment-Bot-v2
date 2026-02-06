@@ -74,5 +74,13 @@
   {
     "timestamp": "2026-02-06T00:27:22.454147",
     "event": "Analyzed Non-Disclosure Agreement (NDA) (English) with risk Low"
+  },
+  {
+    "timestamp": "2026-02-06T01:41:33.894035",
+    "event": "Analyzed Non-Disclosure Agreement (NDA) (English) with risk High"
+  },
+  {
+    "timestamp": "2026-02-06T01:47:49.324190",
+    "event": "Analyzed Non-Disclosure Agreement (NDA) (English) with risk High"
   }
 ]

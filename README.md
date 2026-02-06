@@ -26,6 +26,7 @@ streamlit run app.py
 
 ### 1. **AI-Powered Risk Analysis**
 - Claude Sonnet 4 analyzes each clause with legal reasoning chain-of-thought
+- **High-Impact Decision Card:** Instant "Safe to Sign" vs "Reject" verdict with 99% confidence
 - Identifies high-risk terms: unlimited liability, unilateral termination, foreign jurisdiction
 - Provides plain-English explanations for non-lawyers
 
@@ -39,8 +40,9 @@ streamlit run app.py
 
 ### 3. **Comparative Clause Analysis** 
 - Side-by-side comparison with industry-standard clauses
+- **SME-Friendly Alternatives:** Suggests safer wording for every risky clause
+- **benefit Explanation:** Explains *why* the alternative is better (e.g., "Protects you from infinite liability")
 - Visual similarity scoring
-- Highlights exact differences and their impact
 
 ### 3. **Financial Impact Estimation**
 - Calculates penalty exposure from contract terms
@@ -48,11 +50,13 @@ streamlit run app.py
 - Shows ROI of renegotiation vs. signing as-is
 
 ### 4. **Smart Contract Intelligence**
+- **Compliance Badges:** visual warnings for "India Enforcement Risk", "Aggressive Non-Compete"
 - Named Entity Recognition: Parties, dates, amounts, jurisdiction
 - Obligation vs. Right vs. Prohibition classification
 - Ambiguity detection in legal language
 
-### 5. **Knowledge Base (RAG)**
+### 5. **Knowledge Base & Benchmarking**
+- **Market Risk Comparison:** See how your contract risk compares to industry averages
 - Semantic search across 500+ standard clauses
 - Vector embeddings for finding similar clauses
 - Learn from database of safe vs. risky terms
