@@ -5,7 +5,20 @@ import streamlit as st
 
 @st.cache_resource
 def load_nlp_model():
-    return spacy.load("en_core_web_sm")
+    try:
+        # Robust loading: Try to import as a module first (Best for Streamlit Cloud)
+        import en_core_web_sm
+        nlp = en_core_web_sm.load()
+    except ImportError:
+        # Fallback: standard spacy loading
+        try:
+            nlp = spacy.load("en_core_web_sm")
+        except OSError:
+            # Last resort: download
+            from spacy.cli import download
+            download("en_core_web_sm")
+            nlp = spacy.load("en_core_web_sm")
+    return nlp
 
 def extract_entities(text):
     """
