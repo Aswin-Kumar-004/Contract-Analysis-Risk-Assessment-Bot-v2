@@ -27,12 +27,14 @@ streamlit run app.py
 ### 1. **⚡ Two-Tier Analysis System (NEW!)**
 
 #### **Tier 1: Instant Analysis** (1-2 seconds, no API needed)
+
 - **Keyword-based risk detection** - Pattern matching against 100+ risk indicators
 - **High/Medium/Low risk classification** - Immediate feedback
 - **Basic suggestions** - Quick recommendations
 - **Works offline** - No API key required for initial analysis
 
 #### **Tier 2: Detailed AI Analysis** (Optional, 3-5 seconds)
+
 - **🤖 One-Click Deep Dive** - Click "Get Detailed AI Analysis" button
 - **Batch processing** - All clauses analyzed in a single API call (10x faster than traditional)
 - **Business consequences** - Specific scenarios of what could happen
@@ -142,14 +144,12 @@ User Upload (PDF/DOCX/TXT)
 
    - Click "Load Sample Vendor Agreement" OR upload your own PDF/DOCX/TXT
    - Sample includes 8 risky clauses for demonstration
-
 2. **Get Instant Analysis** (1-2 seconds)
 
    - Click "🚀 Analyze Document"
    - **Instant results:** Risk classification, clause count, basic suggestions
    - See overall risk score and distribution
    - Review keyword-detected issues
-
 3. **Optional: Get Detailed AI Insights** (3-5 seconds)
 
    - Click "🤖 Get Detailed AI Analysis" button
@@ -157,14 +157,12 @@ User Upload (PDF/DOCX/TXT)
    - Get business-specific consequences
    - Receive exact negotiation scripts
    - See mitigation strategies with timelines
-
 4. **Review Decision Recommendation**
 
    - Clear verdict: **SIGN** / **NEGOTIATE** / **REJECT**
    - Action plan with specific steps
    - Timeline estimate
    - Leverage assessment
-
 5. **Explore Detailed Results**
 
    - Expand any clause to see:
@@ -173,22 +171,21 @@ User Upload (PDF/DOCX/TXT)
      - **Comparison:** Your clause vs. safe standard
      - **Negotiation Script:** Exact words to use
      - **Mitigation Steps:** Specific actions with timelines
-
 6. **Export Report**
 
    - Download professional PDF report
    - Share with legal counsel or stakeholders
-6. **Export Report**
+7. **Export Report**
 
    - Click "📄 Prepare PDF Report"
    - Download professional report for legal consultation
    - Includes all analysis, comparisons, and recommendations
-7. **Search Knowledge Base**
+8. **Search Knowledge Base**
 
    - Navigate to "🤖 AI Clause Search (RAG)" tab
    - Paste any clause to find similar standard clauses
    - See semantic similarity scores and safety assessments
-8. **Generate Safe Templates**
+9. **Generate Safe Templates**
 
    - Navigate to "📄 Template Generator" tab
    - Select contract type (NDA, Employment, Service Agreement)
@@ -277,7 +274,6 @@ User Upload (PDF/DOCX/TXT)
 
 **Validated Against:**
 
-- 50 real SME contracts reviewed by lawyers
 - Precision: 87% for high-risk clause detection
 - Recall: 92% for critical terms (indemnity, termination, jurisdiction)
 
@@ -401,19 +397,19 @@ MIT License - Free for personal and commercial use
 
 ### Two-Tier Architecture Benefits:
 
-| Analysis Type | Speed | API Calls | Use Case |
-|--------------|-------|-----------|----------|
-| **Tier 1 (Instant)** | 1-2 seconds | 0 | Quick initial screening, works offline |
-| **Tier 2 (Detailed)** | +3-5 seconds | 1 (batch) | Deep dive for critical contracts |
-| **Traditional (Old)** | 20-30 seconds | 10+ (sequential) | Deprecated - too slow |
+| Analysis Type               | Speed         | API Calls        | Use Case                               |
+| --------------------------- | ------------- | ---------------- | -------------------------------------- |
+| **Tier 1 (Instant)**  | 1-2 seconds   | 0                | Quick initial screening, works offline |
+| **Tier 2 (Detailed)** | +3-5 seconds  | 1 (batch)        | Deep dive for critical contracts       |
+| **Traditional (Old)** | 20-30 seconds | 10+ (sequential) | Deprecated - too slow                  |
 
 ### Optimization Highlights:
 
-✅ **10x faster** than sequential AI analysis  
-✅ **Batch processing** - Single API call for all clauses  
-✅ **Zero heavy dependencies** - Removed spaCy, pandas, torch, sklearn  
-✅ **Streamlit Cloud optimized** - Python 3.13 compatible  
-✅ **Instant results** - Keyword-based analysis requires no API  
+✅ **10x faster** than sequential AI analysis
+✅ **Batch processing** - Single API call for all clauses
+✅ **Zero heavy dependencies** - Removed spaCy, pandas, torch, sklearn
+✅ **Streamlit Cloud optimized** - Python 3.13 compatible
+✅ **Instant results** - Keyword-based analysis requires no API
 
 ### Deployment-Ready:
 
@@ -429,6 +425,7 @@ MIT License - Free for personal and commercial use
 - **Indian SME Community** - Problem validation and testing
 
 ---
+
 ## ⚠️ Disclaimer
 
 This tool is for informational purposes only and does not constitute legal advice. Always consult a qualified lawyer before signing any contract. The AI analysis may not catch all issues, and you should not rely solely on this tool for legal decisions.
