@@ -10,7 +10,8 @@
 
 ## 📹 Demo
 
-**Quick Start:** 
+**Quick Start:**
+
 ```bash
 pip install -r requirements.txt
 python -m spacy download en_core_web_sm
@@ -25,12 +26,14 @@ streamlit run app.py
 ## ✨ Key Features
 
 ### 1. **AI-Powered Risk Analysis**
+
 - Claude Sonnet 4 analyzes each clause with legal reasoning chain-of-thought
 - **High-Impact Decision Card:** Instant "Safe to Sign" vs "Reject" verdict with 99% confidence
 - Identifies high-risk terms: unlimited liability, unilateral termination, foreign jurisdiction
 - Provides plain-English explanations for non-lawyers
 
 ### 2. **Multilingual Support (English + Hindi)**
+
 - **Full Devanagari script support** - Processes Hindi contracts natively
 - **Dictionary-based translation** - 100+ Hindi legal terms mapped to English
 - **Hindi risk keyword detection** - Identifies risky terms in Hindi (असीमित दायित्व, बिना सूचना, etc.)
@@ -38,35 +41,41 @@ streamlit run app.py
 - **Dual analysis engine:** Dictionary translation + vector similarity for comprehensive analysis
 - **Demo contracts included** - Both English and Hindi sample contracts provided
 
-### 3. **Comparative Clause Analysis** 
+### 3. **Comparative Clause Analysis**
+
 - Side-by-side comparison with industry-standard clauses
 - **SME-Friendly Alternatives:** Suggests safer wording for every risky clause
 - **benefit Explanation:** Explains *why* the alternative is better (e.g., "Protects you from infinite liability")
 - Visual similarity scoring
 
 ### 3. **Financial Impact Estimation**
+
 - Calculates penalty exposure from contract terms
 - Estimates litigation costs and business disruption
 - Shows ROI of renegotiation vs. signing as-is
 
 ### 4. **Smart Contract Intelligence**
+
 - **Compliance Badges:** visual warnings for "India Enforcement Risk", "Aggressive Non-Compete"
 - Named Entity Recognition: Parties, dates, amounts, jurisdiction
 - Obligation vs. Right vs. Prohibition classification
 - Ambiguity detection in legal language
 
 ### 5. **Knowledge Base & Benchmarking**
+
 - **Market Risk Comparison:** See how your contract risk compares to industry averages
 - Semantic search across 500+ standard clauses
 - Vector embeddings for finding similar clauses
 - Learn from database of safe vs. risky terms
 
 ### 6. **Template Generator**
+
 - Pre-built safe contract templates (NDA, Employment, Service)
 - Customizable with your business details
 - Compliant with Indian laws
 
 ### 7. **Professional Reporting**
+
 - Export analysis as formatted PDF
 - Suitable for legal consultation
 - Includes all findings, recommendations, and comparisons
@@ -117,41 +126,42 @@ User Upload (PDF/DOCX/TXT)
 ## 🚀 Demo Flow
 
 1. **Upload Contract**
+
    - Click "Load Sample Vendor Agreement" OR upload your own PDF/DOCX/TXT
    - Sample includes 8 risky clauses for demonstration
-
 2. **Analyze Document**
+
    - Click "🚀 Analyze Document"
    - Watch AI processing: segmentation → NER → risk analysis → comparison
-
 3. **View Risk Dashboard**
+
    - Overall risk score with color-coded gauge
    - Financial impact: penalty exposure, litigation cost estimate
    - Visual heatmap showing risk distribution across clauses
-
 4. **Explore Clause Analysis**
+
    - Expand any clause to see:
      - **AI Reasoning Chain:** Step-by-step legal analysis
      - **Trigger Highlights:** Exact phrases that flagged risk
      - **Comparative Analysis:** Your clause vs. standard safe clause
      - **Recommendations:** Specific negotiation points
-
 5. **Generate AI Summary**
+
    - Click "🧠 Generate Plain-English Summary"
    - Get executive summary in simple business language
    - Bottom-line recommendation: Sign / Negotiate / Walk Away
-
 6. **Export Report**
+
    - Click "📄 Prepare PDF Report"
    - Download professional report for legal consultation
    - Includes all analysis, comparisons, and recommendations
-
 7. **Search Knowledge Base**
+
    - Navigate to "🤖 AI Clause Search (RAG)" tab
    - Paste any clause to find similar standard clauses
    - See semantic similarity scores and safety assessments
-
 8. **Generate Safe Templates**
+
    - Navigate to "📄 Template Generator" tab
    - Select contract type (NDA, Employment, Service Agreement)
    - Get pre-approved safe template in 1 click
@@ -161,49 +171,54 @@ User Upload (PDF/DOCX/TXT)
 ## 📊 Functional Requirements Coverage
 
 ### Core Legal NLP Tasks
-✅ **Contract Type Classification** - 6 types supported (Vendor, Employment, Lease, NDA, Partnership, Service)  
-✅ **Clause Extraction** - Intelligent segmentation with Claude fallback  
-✅ **Named Entity Recognition** - Parties (ORG), Dates, Amounts (MONEY), Jurisdiction (GPE)  
-✅ **Obligation vs. Right vs. Prohibition** - Rule-based + LLM classification  
-✅ **Risk Detection** - Keyword triggers + Claude reasoning  
-✅ **Compliance Checking** - Indian law references in risk analysis  
-✅ **Ambiguity Detection** - Flags vague terms ("reasonable", "best efforts")  
-✅ **Clause Similarity Matching** - Vector search against standard templates  
+
+✅ **Contract Type Classification** - 6 types supported (Vendor, Employment, Lease, NDA, Partnership, Service)
+✅ **Clause Extraction** - Intelligent segmentation with Claude fallback
+✅ **Named Entity Recognition** - Parties (ORG), Dates, Amounts (MONEY), Jurisdiction (GPE)
+✅ **Obligation vs. Right vs. Prohibition** - Rule-based + LLM classification
+✅ **Risk Detection** - Keyword triggers + Claude reasoning
+✅ **Compliance Checking** - Indian law references in risk analysis
+✅ **Ambiguity Detection** - Flags vague terms ("reasonable", "best efforts")
+✅ **Clause Similarity Matching** - Vector search against standard templates
 
 ### Risk Assessment
-✅ **Clause-level Scores** - Low / Medium / High with explanations  
-✅ **Contract-level Composite Score** - Weighted average with high-risk triggers  
-✅ **Specific Risk Identification:**
-   - Penalty Clauses ✅
-   - Indemnity Clauses ✅
-   - Unilateral Termination ✅
-   - Arbitration & Jurisdiction ✅
-   - Auto-Renewal & Lock-in ✅
-   - Non-compete & IP Transfer ✅
+
+✅ **Clause-level Scores** - Low / Medium / High with explanations✅ **Contract-level Composite Score** - Weighted average with high-risk triggers✅ **Specific Risk Identification:**
+
+- Penalty Clauses ✅
+- Indemnity Clauses ✅
+- Unilateral Termination ✅
+- Arbitration & Jurisdiction ✅
+- Auto-Renewal & Lock-in ✅
+- Non-compete & IP Transfer ✅
 
 ### User Outputs
-✅ **Simplified Summary** - AI-generated executive summary  
-✅ **Clause-by-Clause Explanation** - Plain language for each clause  
-✅ **Unfavorable Clause Highlights** - Color-coded tabs (High/Medium risk)  
-✅ **Renegotiation Alternatives** - Claude-generated safer clauses  
-✅ **Contract Templates** - 3 pre-built SME-friendly templates  
-✅ **PDF Export** - Professional formatted report  
+
+✅ **Simplified Summary** - AI-generated executive summary
+✅ **Clause-by-Clause Explanation** - Plain language for each clause
+✅ **Unfavorable Clause Highlights** - Color-coded tabs (High/Medium risk)
+✅ **Renegotiation Alternatives** - Claude-generated safer clauses
+✅ **Contract Templates** - 3 pre-built SME-friendly templates
+✅ **PDF Export** - Professional formatted report
 
 ---
 
 ## 💼 Business Impact
 
 ### Time Saved
+
 - **Before:** 2-3 hours for lawyer review
 - **After:** 2 minutes for AI analysis
 - **Savings:** 99% faster first-pass review
 
 ### Cost Saved
+
 - **Legal Consultation:** ₹15,000 - ₹50,000 per contract
 - **Contract Risk Bot:** ₹999/month unlimited contracts
 - **ROI:** Pay for itself with first contract reviewed
 
 ### Risk Reduced
+
 - **73% of Indian SMEs** sign risky contracts unknowingly
 - **42% face contract disputes** within 2 years
 - **Average dispute cost:** ₹3,00,000 - ₹10,00,000
@@ -230,44 +245,50 @@ User Upload (PDF/DOCX/TXT)
 
 ---
 
-## 🚧 Future Enhancements
-
-### Phase 1 (Month 1-3)
-- [ ] Hindi support with Devanagari script parsing
-- [ ] Integration with DigiLocker for authenticated signing
-- [ ] WhatsApp bot for contract Q&A
-- [ ] Chrome extension for analyzing contracts in Gmail
-
-### Phase 2 (Month 4-6)
-- [ ] Bulk contract analysis for enterprises
-- [ ] Indian case law database integration (JUDGEMENT API)
-- [ ] Custom risk profiles by industry (IT, Manufacturing, Real Estate)
-- [ ] Collaborative review with lawyer annotations
-
-### Phase 3 (Month 7-12)
-- [ ] AI-powered clause drafting assistant
-- [ ] Contract lifecycle management (reminders, renewals)
-- [ ] Integration with Zoho, SAP, Oracle contract modules
-- [ ] Multilingual support (Tamil, Telugu, Bengali, Marathi)
-
----
-
 ## 🧪 Testing
 
 **Validated Against:**
+
 - 50 real SME contracts reviewed by lawyers
 - Precision: 87% for high-risk clause detection
 - Recall: 92% for critical terms (indemnity, termination, jurisdiction)
 
 **Test Contracts Included:**
+
 - `data/sample_contract.txt` - Vendor agreement with 8 risky clauses
-- More samples available in `/data/test_contracts/` directory
+- More samples available in `/data/` directory
+
+## 🚀 Deployment
+
+**Option 1: Streamlit Cloud (Recommended)**
+1. Fork repo to GitHub.
+2. Go to [share.streamlit.io](https://share.streamlit.io).
+3. Deploy `app.py`.
+4. Add secret: `ANTHROPIC_API_KEY`.
+
+**Option 2: Docker**
+```bash
+docker build -t contract-bot .
+docker run -p 8501:8501 -e ANTHROPIC_API_KEY="key" contract-bot
+```
+
+## 🇮🇳 Hindi Support: Under the Hood
+This isn't just translation. We use a **Dual-Engine Approach**:
+1.  **Devanagari Recognition:** Auto-detects Hindi script (U+0900 range).
+2.  **Legal Dictionary:** Maps 100+ specific legal terms (e.g., *Samjhauta* → Agreement) before processing.
+3.  **Vector Analysis:** Uses `paraphrase-multilingual-MiniLM` to detect semantic risks directly in Hindi text.
+
+## 🔒 Security
+- **Privacy First:** No database. Contracts are processed in-memory and deleted immediately.
+- **Input Protection:** 5MB limit, strict file controls.
+- **XSRF/CORS:** Protected via Streamlit config.
 
 ---
 
 ## 📖 How It Works
 
 ### 1. Preprocessing
+
 ```python
 # Extract text from PDF/DOCX using pypdf and python-docx
 text = extract_text(uploaded_file)
@@ -275,6 +296,7 @@ text = clean_text(text)  # Remove extra whitespace, normalize
 ```
 
 ### 2. Clause Segmentation
+
 ```python
 # Intelligent splitting using legal numbering patterns
 clauses = segment_clauses(text)
@@ -282,6 +304,7 @@ clauses = segment_clauses(text)
 ```
 
 ### 3. Entity Extraction
+
 ```python
 # spaCy NER for parties, dates, amounts, jurisdiction
 entities = extract_entities(text)
@@ -289,6 +312,7 @@ entities = extract_entities(text)
 ```
 
 ### 4. Risk Analysis (Dual Engine)
+
 ```python
 # Engine 1: Keyword triggers (fast, precise for known patterns)
 risk_level = assess_risk_with_explanation(clause)
@@ -300,6 +324,7 @@ llm_analysis = analyze_clause_with_reasoning(clause, clause_type)
 ```
 
 ### 5. Comparative Analysis
+
 ```python
 # Find most similar standard clause using embeddings
 standard_clause, similarity = compare_to_knowledge_base(clause)
@@ -309,6 +334,7 @@ diff_analysis = analyze_differences(clause, standard_clause)
 ```
 
 ### 6. Financial Impact
+
 ```python
 # Extract amounts from entities
 penalty_exposure = calculate_penalty_from_entities(entities)
@@ -324,6 +350,7 @@ business_disruption_days = estimate_disruption(high_risk_clauses)
 This is a hackathon project. Contributions welcome after the event!
 
 **Areas for contribution:**
+
 - Additional contract templates
 - More standard clauses for knowledge base
 - Improved Hindi translation models
@@ -334,15 +361,6 @@ This is a hackathon project. Contributions welcome after the event!
 ## 📄 License
 
 MIT License - Free for personal and commercial use
-
----
-
-## 👨‍💻 Team
-
-**Developer:** [Your Name]  
-**Email:** [your.email@example.com]  
-**LinkedIn:** [linkedin.com/in/yourprofile]  
-**GitHub:** [github.com/yourusername]
 
 ---
 

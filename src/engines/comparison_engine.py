@@ -1,6 +1,6 @@
-from config import STANDARD_CLAUSES
+from src.config import STANDARD_CLAUSES
 from difflib import SequenceMatcher
-from llm import analyze_clause_differences
+from src.services.llm import analyze_clause_differences
 
 def compare_clause_to_standard(user_clause, clause_type):
     """

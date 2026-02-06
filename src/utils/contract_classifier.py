@@ -1,4 +1,4 @@
-from config import CONTRACT_TYPE_KEYWORDS
+from src.config import CONTRACT_TYPE_KEYWORDS
 
 def classify_contract(text):
     """

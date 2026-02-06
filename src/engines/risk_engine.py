@@ -1,4 +1,4 @@
-from config import RISK_KEYWORDS, RISK_EXPLANATIONS
+from src.config import RISK_KEYWORDS, RISK_EXPLANATIONS
 import re
 
 RISK_SCORE_MAP = {

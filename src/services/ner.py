@@ -1,13 +1,25 @@
 import spacy
 import re
 
-nlp = spacy.load("en_core_web_sm")
+import streamlit as st
+
+@st.cache_resource
+def load_nlp_model():
+    return spacy.load("en_core_web_sm")
 
 def extract_entities(text):
     """
     Enhanced NER: Extracts 12+ entity types from contracts.
     Backward compatible - returns same structure as before but with more entities.
     """
+    try:
+        nlp = load_nlp_model()
+    except OSError:
+        # Fallback if download failed
+        from spacy.cli import download
+        download("en_core_web_sm")
+        nlp = load_nlp_model()
+        
     doc = nlp(text)
 
     entities = {

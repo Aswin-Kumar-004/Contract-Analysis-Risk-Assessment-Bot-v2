@@ -5,22 +5,22 @@ import pandas as pd
 import altair as alt
 import plotly.graph_objects as go
 
-from preprocess import extract_text, clean_text
-from segmenter import segment_clauses
-from classifier import classify_clause
-from contract_classifier import classify_contract
-from risk_engine import assess_risk_with_explanation, contract_risk_score, calculate_financial_risk
-from llm import analyze_clause_with_reasoning, generate_decision_summary
-from audit import log_event
-from export_pdf import export_professional_report
-from ner import extract_entities
-from ambiguity import detect_ambiguity
-from templates import generate_template
-from vector_store import VectorKnowledgeBase
-from comparison_engine import compare_clause_to_standard
-from multilingual import is_hindi, normalize_hindi_contract, format_for_display, detect_hindi_risk_keywords
-from decision_engine import make_decision
-from compliance_checker import check_compliance, generate_compliance_summary
+from src.utils.preprocess import extract_text, clean_text
+from src.utils.segmenter import segment_clauses
+from src.utils.classifier import classify_clause
+from src.utils.contract_classifier import classify_contract
+from src.engines.risk_engine import assess_risk_with_explanation, contract_risk_score, calculate_financial_risk
+from src.services.llm import analyze_clause_with_reasoning, generate_decision_summary
+from src.services.audit import log_event
+from src.services.export_pdf import export_professional_report
+from src.services.ner import extract_entities
+from src.utils.ambiguity import detect_ambiguity
+from src.utils.templates import generate_template
+from src.utils.vector_store import get_vector_kb
+from src.engines.comparison_engine import compare_clause_to_standard
+from src.services.multilingual import is_hindi, normalize_hindi_contract, format_for_display, detect_hindi_risk_keywords
+from src.engines.decision_engine import make_decision
+from src.engines.compliance_checker import check_compliance, generate_compliance_summary
 
 st.set_page_config(page_title="Contract Risk Bot 🇮🇳", layout="wide", page_icon="📜")
 
@@ -118,7 +118,7 @@ if "analyzed_results" not in st.session_state:
 # Init Vector Store (Cached)
 @st.cache_resource
 def get_vector_store():
-    return VectorKnowledgeBase()
+    return get_vector_kb()
 
 st.title("📜 Contract Decision Assistant")
 st.caption("AI-Powered Business Decisions for Indian SMEs | Should you sign? Negotiate? Walk away? | Powered by Claude Sonnet 4 🧠")
@@ -132,7 +132,42 @@ page = st.sidebar.radio("Navigation", [
 if page == "🔍 Analyze Contract":
     with st.sidebar:
         st.markdown("### 📥 Import Contract")
-        uploaded_file = st.file_uploader("Upload Contract (PDF / DOCX / TXT)", type=["pdf", "docx", "txt"], help="Select a legal document to begin analysis")
+        uploaded_file = st.file_uploader("Upload Contract (PDF, DOCX, TXT)", type=["pdf", "docx", "txt"])
+        
+        # Security: 5MB File Size Limit
+        MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
+        
+        if uploaded_file is not None:
+            if uploaded_file.size > MAX_FILE_SIZE:
+                st.error("⚠️ File is too large. Maximum size allowed is 5MB for security reasons.")
+                st.session_state["contract_text"] = None # Clear any previous file
+            else:
+                tmp_file_path = None
+                try:
+                    # Save uploaded file to temp file for processing
+                    suffix = f".{uploaded_file.name.split('.')[-1]}"
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp_file:
+                        tmp_file.write(uploaded_file.read())
+                        tmp_file_path = tmp_file.name
+
+                    # Process the file
+                    raw_text = extract_text(tmp_file_path)
+                    
+                    if len(raw_text) < 50:
+                        st.error("⚠️ Could not extract text. The file might be empty or scanned image (OCR not supported in demo).")
+                        st.session_state["contract_text"] = None
+                    else:
+                        st.session_state["contract_text"] = raw_text
+                        st.success("✅ File uploaded successfully!")
+                
+                except Exception as e:
+                    st.error(f"Error processing file: {str(e)}")
+                    st.session_state["contract_text"] = None
+                
+                finally:
+                    # Security: Immediate Cleanup
+                    if tmp_file_path and os.path.exists(tmp_file_path):
+                        os.unlink(tmp_file_path)
         
         if st.session_state["analyzed_results"] is None:
             st.markdown("---")

@@ -55,7 +55,7 @@ def check_compliance(contract_text, contract_type, clauses):
     Check contract for compliance with Indian laws using AI-driven analysis.
     This ensures that all feedback is strictly related to the document.
     """
-    from llm import analyze_compliance_with_ai
+    from src.services.llm import analyze_compliance_with_ai
     
     # 1. Get AI-driven dynamic compliance report
     compliance_report = analyze_compliance_with_ai(contract_text, contract_type)

@@ -88,3 +88,7 @@ class VectorKnowledgeBase:
 
     def get_embedding(self, text):
         return self.model.encode([text])[0]
+
+@st.cache_resource
+def get_vector_kb():
+    return VectorKnowledgeBase()

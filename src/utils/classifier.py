@@ -1,4 +1,4 @@
-from config import CLAUSE_TYPES
+from src.config import CLAUSE_TYPES
 
 def classify_clause(text):
     """
