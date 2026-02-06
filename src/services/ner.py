@@ -1,11 +1,10 @@
 import re
 import streamlit as st
-# No spacy imports
 
 def extract_entities(text):
     """
     Enhanced NER: Extracts 12+ entity types from contracts using Regex Patterns.
-    Refactored to be pure python (No Spacy) for deployment reliability.
+    Pure Python implementation optimized for cloud deployment.
     """
     entities = {
         # Original 4 types

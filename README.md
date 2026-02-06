@@ -14,7 +14,6 @@
 
 ```bash
 pip install -r requirements.txt
-python -m spacy download en_core_web_sm
 export ANTHROPIC_API_KEY="your_key_here"
 streamlit run app.py
 ```
@@ -91,7 +90,7 @@ User Upload (PDF/DOCX/TXT)
          ↓
     Claude Clause Segmentation (intelligent splitting)
          ↓
-    Named Entity Recognition (spaCy)
+    Named Entity Recognition (Regex + Heuristics)
          ↓
 ┌────────────────────────────────────┐
 │   DUAL RISK ANALYSIS ENGINE        │
@@ -114,10 +113,9 @@ User Upload (PDF/DOCX/TXT)
 ## 🛠️ Tech Stack
 
 - **LLM:** Claude Sonnet 4 (Anthropic API) - Legal reasoning
-- **NLP:** spaCy - Named Entity Recognition, tokenization
-- **Embeddings:** Sentence-Transformers (paraphrase-multilingual-MiniLM-L12-v2)
+- **NLP:** Regex + Pattern Matching - Named Entity Recognition
 - **UI:** Streamlit - Interactive web interface
-- **Visualization:** Plotly, Altair - Risk dashboards
+- **Architecture:** Cloud-Native (Lightweight, fast deployment)
 - **PDF:** ReportLab - Professional report generation
 - **Storage:** JSON - Audit logs (local, no cloud)
 
@@ -306,7 +304,7 @@ clauses = segment_clauses(text)
 ### 3. Entity Extraction
 
 ```python
-# spaCy NER for parties, dates, amounts, jurisdiction
+# Regex-based NER for parties, dates, amounts, jurisdiction
 entities = extract_entities(text)
 # Regex fallback for Indian currency (₹, Rs., lakhs, crores)
 ```
@@ -367,8 +365,6 @@ MIT License - Free for personal and commercial use
 ## 🙏 Acknowledgments
 
 - **Anthropic** - Claude API for legal reasoning
-- **Hugging Face** - Sentence transformers
-- **spaCy** - NLP models
 - **Indian SME Community** - Problem validation and testing
 
 ---

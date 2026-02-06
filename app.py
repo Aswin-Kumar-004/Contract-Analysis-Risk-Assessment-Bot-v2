@@ -698,14 +698,16 @@ if page == "🔍 Analyze Contract":
         st.markdown("### ⚠️ Risk Distribution")
         col_r1, col_r2, col_r3 = st.columns(3)
         with col_r1:
-            st.metric("High Risks", risk_report.get('High', 0), delta="Critical", delta_color="inverse")
+            st.metric("High Risks", risk_counts.get('High', 0), delta="Critical", delta_color="inverse")
         with col_r2:
-            st.metric("Medium Risks", risk_report.get('Medium', 0), delta="Warning", delta_color="off")
+            st.metric("Medium Risks", risk_counts.get('Medium', 0), delta="Warning", delta_color="off")
         with col_r3:
-            st.metric("Low Risks", risk_report.get('Low', 0), delta="Safe", delta_color="normal")
+            st.metric("Low Risks", risk_counts.get('Low', 0), delta="Safe", delta_color="normal")
             
-        # Simple progress bar for risk score
-        st.progress(risk_report.get('score', 50) / 100, text=f"Overall Risk Score: {risk_report.get('score', 50)}/100")
+        # Simple progress bar for overall risk
+        total_clauses = sum(risk_counts.values())
+        high_risk_pct = (risk_counts.get('High', 0) / total_clauses * 100) if total_clauses > 0 else 0
+        st.progress(high_risk_pct / 100, text=f"High Risk Percentage: {high_risk_pct:.1f}%")
         
         # Entities (Enhanced - Now shows 12+ types)
         with st.expander(f"🔍 Extracted Key Information ({sum(len(v) for v in data['entities'].values())} items found)"):
@@ -1043,7 +1045,7 @@ elif page == "🧠 Tech & Architecture":
              ↓
         Contract Type Classification
              ↓
-        Named Entity Recognition (spaCy)
+        Named Entity Recognition (Regex + Heuristics)
              ↓
         Clause Segmentation (Regex + Sentence Tokenization)
              ↓
@@ -1066,12 +1068,10 @@ elif page == "🧠 Tech & Architecture":
     ### Technology Stack
     
     - **LLM:** Claude Sonnet 4 (Anthropic) — Legal reasoning with chain-of-thought
-    - **NLP:** spaCy en_core_web_sm — Named Entity Recognition
-    - **Embeddings:** Sentence-Transformers (paraphrase-multilingual-MiniLM-L12-v2)
-    - **Vector Search:** Cosine Similarity
+    - **NLP:** Regex + Pattern Matching — Named Entity Recognition
     - **UI:** Streamlit
-    - **Visualization:** Plotly, Altair
     - **PDF:** ReportLab
+    - **Architecture:** Cloud-Native (Zero heavy dependencies)
     
     ### Key Innovations
     
