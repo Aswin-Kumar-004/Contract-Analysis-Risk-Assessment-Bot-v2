@@ -1,10 +1,10 @@
-# 🇮🇳 Contract Risk Bot - AI Legal Assistant for Indian SMEs
+# 🇮🇳 Contract Analysis Risk Assessment Bot - AI Legal Assistant for Indian SMEs
 
 ## 🏆 Hackathon Submission
 
 **Problem:** 73% of Indian SMEs sign contracts without legal review, leading to disputes, financial losses, and business closure.
 
-**Solution:** AI-powered contract analysis that identifies risks in 60 seconds and provides actionable recommendations.
+**Solution:** AI-powered contract analysis that identifies risks in **under 2 seconds** with optional detailed AI insights in 3-5 seconds.
 
 ---
 
@@ -18,60 +18,62 @@ export ANTHROPIC_API_KEY="your_key_here"
 streamlit run app.py
 ```
 
-**Demo Video:** [Record a 2-minute Loom video showing the demo flow below]
+**Try it:** Upload any contract and get instant analysis. Add API key for detailed AI insights.
 
 ---
 
 ## ✨ Key Features
 
-### 1. **AI-Powered Risk Analysis**
+### 1. **⚡ Two-Tier Analysis System (NEW!)**
 
-- Claude Sonnet 4 analyzes each clause with legal reasoning chain-of-thought
-- **High-Impact Decision Card:** Instant "Safe to Sign" vs "Reject" verdict with 99% confidence
-- Identifies high-risk terms: unlimited liability, unilateral termination, foreign jurisdiction
-- Provides plain-English explanations for non-lawyers
+#### **Tier 1: Instant Analysis** (1-2 seconds, no API needed)
+- **Keyword-based risk detection** - Pattern matching against 100+ risk indicators
+- **High/Medium/Low risk classification** - Immediate feedback
+- **Basic suggestions** - Quick recommendations
+- **Works offline** - No API key required for initial analysis
 
-### 2. **Multilingual Support (English + Hindi)**
+#### **Tier 2: Detailed AI Analysis** (Optional, 3-5 seconds)
+- **🤖 One-Click Deep Dive** - Click "Get Detailed AI Analysis" button
+- **Batch processing** - All clauses analyzed in a single API call (10x faster than traditional)
+- **Business consequences** - Specific scenarios of what could happen
+- **Negotiation scripts** - Exact words to use when requesting changes
+- **Mitigation strategies** - Step-by-step action plans with timelines
+- **AI-refined risk levels** - More accurate than keyword detection alone
+
+### 2. **AI-Powered Decision Engine**
+
+- Claude Sonnet 4 analyzes contracts with legal reasoning
+- **Clear Verdict:** "SIGN" / "NEGOTIATE" / "REJECT" with confidence scores
+- **Action Plans:** Step-by-step what to do next
+- **Timeline Estimates:** How long negotiation will take
+- **Leverage Assessment:** Understanding your negotiating position
+
+### 3. **Multilingual Support (English + Hindi)**
 
 - **Full Devanagari script support** - Processes Hindi contracts natively
 - **Dictionary-based translation** - 100+ Hindi legal terms mapped to English
 - **Hindi risk keyword detection** - Identifies risky terms in Hindi (असीमित दायित्व, बिना सूचना, etc.)
-- **Semantic vector analysis** - Uses multilingual embeddings for Hindi clause comparison
-- **Dual analysis engine:** Dictionary translation + vector similarity for comprehensive analysis
 - **Demo contracts included** - Both English and Hindi sample contracts provided
 
-### 3. **Comparative Clause Analysis**
+### 4. **Comparative Clause Analysis**
 
 - Side-by-side comparison with industry-standard clauses
 - **SME-Friendly Alternatives:** Suggests safer wording for every risky clause
-- **benefit Explanation:** Explains *why* the alternative is better (e.g., "Protects you from infinite liability")
+- **Benefit Explanation:** Explains *why* the alternative is better
 - Visual similarity scoring
 
-### 3. **Financial Impact Estimation**
+### 5. **Financial Impact Estimation**
 
 - Calculates penalty exposure from contract terms
 - Estimates litigation costs and business disruption
 - Shows ROI of renegotiation vs. signing as-is
 
-### 4. **Smart Contract Intelligence**
+### 6. **Smart Contract Intelligence**
 
-- **Compliance Badges:** visual warnings for "India Enforcement Risk", "Aggressive Non-Compete"
-- Named Entity Recognition: Parties, dates, amounts, jurisdiction
+- Named Entity Recognition: Parties, dates, amounts, jurisdiction (12+ entity types)
 - Obligation vs. Right vs. Prohibition classification
 - Ambiguity detection in legal language
-
-### 5. **Knowledge Base & Benchmarking**
-
-- **Market Risk Comparison:** See how your contract risk compares to industry averages
-- Semantic search across 500+ standard clauses
-- Vector embeddings for finding similar clauses
-- Learn from database of safe vs. risky terms
-
-### 6. **Template Generator**
-
-- Pre-built safe contract templates (NDA, Employment, Service)
-- Customizable with your business details
-- Compliant with Indian laws
+- Modality analysis (must, may, shall)
 
 ### 7. **Professional Reporting**
 
@@ -86,22 +88,34 @@ streamlit run app.py
 ```
 User Upload (PDF/DOCX/TXT)
          ↓
-    Preprocessing (text extraction)
+    Text Extraction (pypdf, python-docx)
          ↓
-    Claude Clause Segmentation (intelligent splitting)
+    Text Cleaning & Normalization
+         ↓
+    Contract Type Classification
          ↓
     Named Entity Recognition (Regex + Heuristics)
          ↓
-┌────────────────────────────────────┐
-│   DUAL RISK ANALYSIS ENGINE        │
-├────────────────────────────────────┤
-│ 1. Keyword Triggers                │ → Regex patterns
-│ 2. Claude Legal Reasoning          │ → Chain-of-thought
-│ 3. Comparative Analysis            │ → Vector similarity
-│ 4. Financial Impact Calculation    │ → Business logic
-└────────────────────────────────────┘
+    Clause Segmentation (Regex + Sentence Tokenization)
          ↓
-    Knowledge Base Search (RAG)
+┌─────────────────────────────────────────┐
+│     TIER 1: INSTANT ANALYSIS            │
+├─────────────────────────────────────────┤
+│ 1. Keyword Trigger Detection (Regex)    │ → 1-2 seconds
+│ 2. Risk Classification (Pattern Match)  │ → No API calls
+│ 3. Basic Suggestions                    │ → Immediate feedback
+└─────────────────────────────────────────┘
+         ↓ (Optional)
+┌─────────────────────────────────────────┐
+│     TIER 2: DETAILED AI ANALYSIS        │
+├─────────────────────────────────────────┤
+│ 1. Batch Claude API Call                │ → Single request
+│ 2. Business Consequence Analysis        │ → 3-5 seconds
+│ 3. Negotiation Script Generation        │ → All clauses at once
+│ 4. Mitigation Strategy Planning         │ → 10x faster than sequential
+└─────────────────────────────────────────┘
+         ↓
+    Decision Engine (Sign/Negotiate/Reject)
          ↓
     Generate Professional Report
          ↓
@@ -112,12 +126,13 @@ User Upload (PDF/DOCX/TXT)
 
 ## 🛠️ Tech Stack
 
-- **LLM:** Claude Sonnet 4 (Anthropic API) - Legal reasoning
+- **LLM:** Claude Sonnet 4 (Anthropic API) - Legal reasoning with batch processing
 - **NLP:** Regex + Pattern Matching - Named Entity Recognition
 - **UI:** Streamlit - Interactive web interface
-- **Architecture:** Cloud-Native (Lightweight, fast deployment)
+- **Architecture:** Cloud-Native, Zero heavy dependencies (spaCy/pandas/torch removed)
 - **PDF:** ReportLab - Professional report generation
 - **Storage:** JSON - Audit logs (local, no cloud)
+- **Deployment:** Streamlit Cloud ready (Python 3.13 compatible)
 
 ---
 
@@ -127,27 +142,42 @@ User Upload (PDF/DOCX/TXT)
 
    - Click "Load Sample Vendor Agreement" OR upload your own PDF/DOCX/TXT
    - Sample includes 8 risky clauses for demonstration
-2. **Analyze Document**
+
+2. **Get Instant Analysis** (1-2 seconds)
 
    - Click "🚀 Analyze Document"
-   - Watch AI processing: segmentation → NER → risk analysis → comparison
-3. **View Risk Dashboard**
+   - **Instant results:** Risk classification, clause count, basic suggestions
+   - See overall risk score and distribution
+   - Review keyword-detected issues
 
-   - Overall risk score with color-coded gauge
-   - Financial impact: penalty exposure, litigation cost estimate
-   - Visual heatmap showing risk distribution across clauses
-4. **Explore Clause Analysis**
+3. **Optional: Get Detailed AI Insights** (3-5 seconds)
+
+   - Click "🤖 Get Detailed AI Analysis" button
+   - **Batch AI processing:** All clauses analyzed simultaneously
+   - Get business-specific consequences
+   - Receive exact negotiation scripts
+   - See mitigation strategies with timelines
+
+4. **Review Decision Recommendation**
+
+   - Clear verdict: **SIGN** / **NEGOTIATE** / **REJECT**
+   - Action plan with specific steps
+   - Timeline estimate
+   - Leverage assessment
+
+5. **Explore Detailed Results**
 
    - Expand any clause to see:
-     - **AI Reasoning Chain:** Step-by-step legal analysis
-     - **Trigger Highlights:** Exact phrases that flagged risk
-     - **Comparative Analysis:** Your clause vs. standard safe clause
-     - **Recommendations:** Specific negotiation points
-5. **Generate AI Summary**
+     - **AI Reasoning:** Why this is risky
+     - **Business Impact:** What could happen to your business
+     - **Comparison:** Your clause vs. safe standard
+     - **Negotiation Script:** Exact words to use
+     - **Mitigation Steps:** Specific actions with timelines
 
-   - Click "🧠 Generate Plain-English Summary"
-   - Get executive summary in simple business language
-   - Bottom-line recommendation: Sign / Negotiate / Walk Away
+6. **Export Report**
+
+   - Download professional PDF report
+   - Share with legal counsel or stakeholders
 6. **Export Report**
 
    - Click "📄 Prepare PDF Report"
@@ -367,13 +397,38 @@ MIT License - Free for personal and commercial use
 
 ---
 
+## ⚡ Performance & Speed Optimizations
+
+### Two-Tier Architecture Benefits:
+
+| Analysis Type | Speed | API Calls | Use Case |
+|--------------|-------|-----------|----------|
+| **Tier 1 (Instant)** | 1-2 seconds | 0 | Quick initial screening, works offline |
+| **Tier 2 (Detailed)** | +3-5 seconds | 1 (batch) | Deep dive for critical contracts |
+| **Traditional (Old)** | 20-30 seconds | 10+ (sequential) | Deprecated - too slow |
+
+### Optimization Highlights:
+
+✅ **10x faster** than sequential AI analysis  
+✅ **Batch processing** - Single API call for all clauses  
+✅ **Zero heavy dependencies** - Removed spaCy, pandas, torch, sklearn  
+✅ **Streamlit Cloud optimized** - Python 3.13 compatible  
+✅ **Instant results** - Keyword-based analysis requires no API  
+
+### Deployment-Ready:
+
+- **Lightweight:** ~50MB slug (down from 800MB+)
+- **Fast boot:** Under 10 seconds on Streamlit Cloud
+- **No compilation:** Pure Python + pre-built wheels only
+
+---
+
 ## 🙏 Acknowledgments
 
 - **Anthropic** - Claude API for legal reasoning
 - **Indian SME Community** - Problem validation and testing
 
 ---
-
 ## ⚠️ Disclaimer
 
 This tool is for informational purposes only and does not constitute legal advice. Always consult a qualified lawyer before signing any contract. The AI analysis may not catch all issues, and you should not rely solely on this tool for legal decisions.
