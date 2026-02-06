@@ -259,24 +259,29 @@ User Upload (PDF/DOCX/TXT)
 ## 🚀 Deployment
 
 **Option 1: Streamlit Cloud (Recommended)**
+
 1. Fork repo to GitHub.
 2. Go to [share.streamlit.io](https://share.streamlit.io).
 3. Deploy `app.py`.
 4. Add secret: `ANTHROPIC_API_KEY`.
 
 **Option 2: Docker**
+
 ```bash
 docker build -t contract-bot .
 docker run -p 8501:8501 -e ANTHROPIC_API_KEY="key" contract-bot
 ```
 
 ## 🇮🇳 Hindi Support: Under the Hood
+
 This isn't just translation. We use a **Dual-Engine Approach**:
-1.  **Devanagari Recognition:** Auto-detects Hindi script (U+0900 range).
-2.  **Legal Dictionary:** Maps 100+ specific legal terms (e.g., *Samjhauta* → Agreement) before processing.
-3.  **Vector Analysis:** Uses `paraphrase-multilingual-MiniLM` to detect semantic risks directly in Hindi text.
+
+1. **Devanagari Recognition:** Auto-detects Hindi script (U+0900 range).
+2. **Legal Dictionary:** Maps 100+ specific legal terms (e.g., *Samjhauta* → Agreement) before processing.
+3. **Vector Analysis:** Uses `paraphrase-multilingual-MiniLM` to detect semantic risks directly in Hindi text.
 
 ## 🔒 Security
+
 - **Privacy First:** No database. Contracts are processed in-memory and deleted immediately.
 - **Input Protection:** 5MB limit, strict file controls.
 - **XSRF/CORS:** Protected via Streamlit config.

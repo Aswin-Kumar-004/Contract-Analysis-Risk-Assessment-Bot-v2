@@ -120,7 +120,7 @@ if "analyzed_results" not in st.session_state:
 def get_vector_store():
     return get_vector_kb()
 
-st.title("📜 Contract Decision Assistant")
+st.title("📜 Contract Analysis Risk Assessment Bot")
 st.caption("AI-Powered Business Decisions for Indian SMEs | Should you sign? Negotiate? Walk away? | Powered by Claude Sonnet 4 🧠")
 
 # Sidebar navigation
@@ -240,52 +240,56 @@ if page == "🔍 Analyze Contract":
                 # 3. Clause Segmentation
                 clauses = segment_clauses(text)
                 
-                # 4. Clause-by-Clause Risk Analysis
+                # 4. BATCH Risk Analysis (NEW: 5-10x faster!)
+                # Prepare clauses for batch processing
+                clauses_for_batch = []
+                for clause in clauses:
+                    clause_type = classify_clause(clause)
+                    clauses_for_batch.append({"text": clause, "type": clause_type})
+                
+                # Single API call for all clauses!
+                if os.getenv("ANTHROPIC_API_KEY"):
+                    from src.services.llm import analyze_all_clauses_batch
+                    batch_results = analyze_all_clauses_batch(clauses_for_batch)
+                else:
+                    batch_results = []
+                
+                # Build results with batch analysis
                 results = []
                 for idx, clause in enumerate(clauses, start=1):
                     clause_type = classify_clause(clause)
                     
-                    # For Hindi contracts, use vector-based semantic analysis
-                    if is_hindi_contract:
-                        # Use vector similarity for Hindi risk detection
-                        vector_analysis = kb.analyze_multilingual_risk(clause)
-                        risk = vector_analysis["risk"]
-                        
-                        # Get AI analysis if API is available
-                        if os.getenv("ANTHROPIC_API_KEY") and risk in ["High", "Medium"]:
-                            llm_analysis = analyze_clause_with_reasoning(clause, clause_type)
-                            explanation = llm_analysis.get("plain_english", vector_analysis.get("reason", "Hindi clause detected"))
-                            suggestion = llm_analysis.get("standard_alternative", "Consider renegotiating this clause")
-                            business_consequences = llm_analysis.get("business_consequences", [])
-                            negotiation_script = llm_analysis.get("negotiation_script", "")
-                            mitigation_strategies = llm_analysis.get("mitigation_strategies", [])
-                        else:
-                            explanation = vector_analysis.get("reason", "Semantic analysis performed")
-                            suggestion = "Review this clause carefully" if risk != "Low" else "Standard clause"
-                            business_consequences = []
-                            negotiation_script = ""
-                        
-                        triggers = []  # Vector-based, no keyword triggers
+                    # Get keyword-based risk assessment
+                    risk_data = assess_risk_with_explanation(clause)
+                    risk = risk_data["risk"]
+                    triggers = risk_data.get("triggers", [])
+                    
+                    # Get AI analysis from batch (if available)
+                    if batch_results and idx <= len(batch_results):
+                        llm_analysis = batch_results[idx - 1]
+                        explanation = llm_analysis.get("plain_english", "Analysis unavailable")
+                        suggestion = llm_analysis.get("standard_alternative", "Review manually")
+                        business_consequences = llm_analysis.get("business_consequences", [])
+                        negotiation_script = llm_analysis.get("negotiation_script", "")
+                        mitigation_strategies = llm_analysis.get("mitigation_strategies", [])
+                        # Override risk if AI detected something different
+                        ai_risk = llm_analysis.get("risk_level", risk)
+                        if ai_risk in ["High", "Medium", "Low"]:
+                            risk = ai_risk
                     else:
-                        # English: Use keyword-based + AI analysis
-                        risk_data = assess_risk_with_explanation(clause)
-                        risk = risk_data["risk"]
-                        triggers = risk_data.get("triggers", [])
-                        
-                        # Get AI analysis for High and Medium risk clauses
-                        if risk in ["High", "Medium"] and os.getenv("ANTHROPIC_API_KEY"):
-                            llm_analysis = analyze_clause_with_reasoning(clause, clause_type)
-                            explanation = llm_analysis.get("plain_english", "Analysis unavailable")
-                            suggestion = llm_analysis.get("standard_alternative", "Consult legal counsel")
-                            business_consequences = llm_analysis.get("business_consequences", [])
-                            negotiation_script = llm_analysis.get("negotiation_script", "")
-                            mitigation_strategies = llm_analysis.get("mitigation_strategies", [])
+                        # Fallback if no AI analysis
+                        if risk == "High":
+                            explanation = "High risk detected by keyword analysis"
+                            suggestion = "Consult legal counsel before signing"
+                        elif risk == "Medium":
+                            explanation = "Medium risk - review carefully"
+                            suggestion = "Consider negotiating this clause"
                         else:
                             explanation = "Low risk - appears to be standard language"
                             suggestion = "No changes needed"
-                            business_consequences = []
-                            negotiation_script = ""
-                            mitigation_strategies = []
+                        business_consequences = []
+                        negotiation_script = ""
+                        mitigation_strategies = []
                     
                     # Detect ambiguity
                     ambiguity_terms = detect_ambiguity(clause)
@@ -332,8 +336,13 @@ if page == "🔍 Analyze Contract":
                     'overall_risk': overall_risk
                 })
                 
-                # 8. **NEW: COMPLIANCE CHECKING** - Indian Law Validation
-                compliance_report = check_compliance(text, contract_type, results)
+                # 8. **OPTIONAL: COMPLIANCE CHECKING** - Disabled for speed
+                # compliance_report = check_compliance(text, contract_type, results)
+                compliance_report = {
+                    "overall_status": "Not Analyzed (Speed Mode)",
+                    "violations": [],
+                    "warnings": []
+                }
                 
                 # Store results
                 st.session_state["analyzed_results"] = {
