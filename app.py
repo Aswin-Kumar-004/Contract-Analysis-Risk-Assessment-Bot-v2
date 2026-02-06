@@ -240,56 +240,30 @@ if page == "🔍 Analyze Contract":
                 # 3. Clause Segmentation
                 clauses = segment_clauses(text)
                 
-                # 4. BATCH Risk Analysis (NEW: 5-10x faster!)
-                # Prepare clauses for batch processing
-                clauses_for_batch = []
-                for clause in clauses:
-                    clause_type = classify_clause(clause)
-                    clauses_for_batch.append({"text": clause, "type": clause_type})
-                
-                # Single API call for all clauses!
-                if os.getenv("ANTHROPIC_API_KEY"):
-                    from src.services.llm import analyze_all_clauses_batch
-                    batch_results = analyze_all_clauses_batch(clauses_for_batch)
-                else:
-                    batch_results = []
-                
-                # Build results with batch analysis
+                # 4. FAST Analysis (Keyword-Based Only - Instant Results!)
                 results = []
                 for idx, clause in enumerate(clauses, start=1):
                     clause_type = classify_clause(clause)
                     
-                    # Get keyword-based risk assessment
+                    # Keyword-based risk assessment (fast!)
                     risk_data = assess_risk_with_explanation(clause)
                     risk = risk_data["risk"]
                     triggers = risk_data.get("triggers", [])
                     
-                    # Get AI analysis from batch (if available)
-                    if batch_results and idx <= len(batch_results):
-                        llm_analysis = batch_results[idx - 1]
-                        explanation = llm_analysis.get("plain_english", "Analysis unavailable")
-                        suggestion = llm_analysis.get("standard_alternative", "Review manually")
-                        business_consequences = llm_analysis.get("business_consequences", [])
-                        negotiation_script = llm_analysis.get("negotiation_script", "")
-                        mitigation_strategies = llm_analysis.get("mitigation_strategies", [])
-                        # Override risk if AI detected something different
-                        ai_risk = llm_analysis.get("risk_level", risk)
-                        if ai_risk in ["High", "Medium", "Low"]:
-                            risk = ai_risk
+                    # Basic explanations (no AI needed)
+                    if risk == "High":
+                        explanation = "High risk detected by keyword analysis"
+                        suggestion = "Consult legal counsel before signing"
+                    elif risk == "Medium":
+                        explanation = "Medium risk - review carefully"
+                        suggestion = "Consider negotiating this clause"
                     else:
-                        # Fallback if no AI analysis
-                        if risk == "High":
-                            explanation = "High risk detected by keyword analysis"
-                            suggestion = "Consult legal counsel before signing"
-                        elif risk == "Medium":
-                            explanation = "Medium risk - review carefully"
-                            suggestion = "Consider negotiating this clause"
-                        else:
-                            explanation = "Low risk - appears to be standard language"
-                            suggestion = "No changes needed"
-                        business_consequences = []
-                        negotiation_script = ""
-                        mitigation_strategies = []
+                        explanation = "Low risk - appears to be standard language"
+                        suggestion = "No changes needed"
+                    
+                    business_consequences = []
+                    negotiation_script = ""
+                    mitigation_strategies = []
                     
                     # Detect ambiguity
                     ambiguity_terms = detect_ambiguity(clause)
@@ -695,6 +669,52 @@ if page == "🔍 Analyze Contract":
                      delta=f"{my_score - market_risk} points ({delta_msg})",
                      delta_color="inverse")
 
+        st.divider()
+        
+        # ═══════════════════════════════════════════════════════════════
+        # 🚀 OPTIONAL: GET DETAILED AI ANALYSIS
+        # ═══════════════════════════════════════════════════════════════
+        
+        if os.getenv("ANTHROPIC_API_KEY") and not data.get("ai_enhanced", False):
+            st.info("💡 **Fast analysis complete!** For deeper insights, business consequences, and negotiation scripts, get detailed AI analysis below.")
+            
+            if st.button("🤖 Get Detailed AI Analysis", type="primary", use_container_width=True):
+                with st.spinner("🧠 Running deep AI analysis on all clauses... (3-5 seconds)"):
+                    # Prepare clauses for batch
+                    clauses_for_batch = []
+                    for result in data["results"]:
+                        clauses_for_batch.append({
+                            "text": result["text"],
+                            "type": result["type"]
+                        })
+                    
+                    # Run batch AI analysis
+                    from src.services.llm import analyze_all_clauses_batch
+                    batch_results = analyze_all_clauses_batch(clauses_for_batch)
+                    
+                    # Update results with AI insights
+                    for idx, result in enumerate(data["results"]):
+                        if batch_results and idx < len(batch_results):
+                            ai_analysis = batch_results[idx]
+                            result["explanation"] = ai_analysis.get("plain_english", result["explanation"])
+                            result["suggestion"] = ai_analysis.get("standard_alternative", result["suggestion"])
+                            result["business_consequences"] = ai_analysis.get("business_consequences", [])
+                            result["negotiation_script"] = ai_analysis.get("negotiation_script", "")
+                            result["mitigation_strategies"] = ai_analysis.get("mitigation_strategies", [])
+                            # Update risk if AI sees it differently
+                            ai_risk = ai_analysis.get("risk_level", result["risk"])
+                            if ai_risk in ["High", "Medium", "Low"]:
+                                result["risk"] = ai_risk
+                    
+                    # Mark as AI-enhanced
+                    st.session_state["analyzed_results"]["ai_enhanced"] = True
+                    data = st.session_state["analyzed_results"]
+                    
+                    st.success("✨ AI analysis complete! Scroll down to see detailed insights.")
+                    st.rerun()
+        elif data.get("ai_enhanced", False):
+            st.success("✨ **AI-Enhanced Analysis** - Showing detailed business insights and negotiation scripts")
+        
         st.divider()
         
         # Risk Distribution Chart
